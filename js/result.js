@@ -1,100 +1,76 @@
-
 const answers =
-    JSON.parse(localStorage.getItem("rareAnswers"));
+JSON.parse(localStorage.getItem("rareAnswers"));
 
 
-
-const scoreElement =
-    document.getElementById("score");
-
-
-const description =
-    document.getElementById("description");
-
-
-const details =
-    document.getElementById("details");
-
-
-
-if (!answers) {
-
-    window.location.href = "index.html";
-
+if(!answers){
+window.location.href="index.html";
 }
-
 
 
 let probability = 1;
 
 
-
-answers.forEach(answer => {
-
-    probability *= answer.rarity;
-
+answers.forEach(a=>{
+probability *= a.rarity;
 });
 
 
 
-let percentage =
-    probability * 100;
-
-
-
 let people =
-    Math.round(1 / probability);
+Math.round(1/probability);
 
 
 
-if (people < 1) {
-
-    people = 1;
-
-}
-
-
-
-scoreElement.innerHTML = `
+document.getElementById("score").innerHTML = `
 
 <div class="score-number">
-
-${percentage.toFixed(6)}%
-
+${(probability*100).toFixed(8)}%
 </div>
 
 `;
 
 
 
-description.innerHTML = `
+document.getElementById("description").innerHTML = `
 
-Tu fais partie d'environ :
+Tu es environ :
 
 <h2>
-
 1 personne sur ${people.toLocaleString()}
-
 </h2>
 
 `;
 
 
 
-details.innerHTML = `
+let rareTraits =
+answers
+.filter(a=>a.rarity <= 0.10)
+.sort((a,b)=>a.rarity-b.rarity);
 
-<h3>Ce qui te rend unique :</h3>
 
-${answers.map(a => `
+
+document.getElementById("details").innerHTML = `
+
+<h3>
+✨ Ce qui te rend vraiment rare :
+</h3>
+
+
+${
+rareTraits.map(a=>`
 
 <div class="trait">
 
-${a.label}
+<strong>${a.label}</strong>
+
+<br>
+
+${(a.rarity*100).toFixed(2)}% de la population
 
 </div>
 
 `).join("")
-
-    }
+}
 
 `;
